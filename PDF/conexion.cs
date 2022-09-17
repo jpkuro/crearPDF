@@ -11,7 +11,7 @@ namespace PDF
     {
         public static MySqlConnection Conexion()
         {
-            string servidor = "loclhost";
+            string servidor = "localhost";
             string bd = "tienda";
             string usuario = "root";
             string password = "Kuro921*";

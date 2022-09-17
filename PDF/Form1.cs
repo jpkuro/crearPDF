@@ -5,6 +5,7 @@ using iText.Kernel.Pdf;
 using iText.Layout;
 using iText.Layout.Element;
 using iText.Layout.Properties;
+using MySql.Data.MySqlClient;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -48,6 +49,22 @@ namespace PDF
             foreach (string columna in columnas)
             {
                 tabla.AddHeaderCell(new Cell().Add(new Paragraph(columna).SetFont(fontColumnas)));
+            }
+
+            string sql = "SELECT p.codigo, p.nombre, p.precio_publico, p.existencias, c.nombre as categoria FROM productos AS p INNER JOIN categorias AS c ON p.idCategoria=c.id";
+            MySqlConnection conexionBD = conexion.Conexion();
+            conexionBD.Open();
+
+            MySqlCommand comando = new MySqlCommand(sql, conexionBD);
+            MySqlDataReader reader = comando.ExecuteReader();
+
+            while (reader.Read())
+            {
+                tabla.AddCell(new Cell().Add(new Paragraph(reader["codigo"].ToString()).SetFont(fontContenido)));
+                tabla.AddCell(new Cell().Add(new Paragraph(reader["nombre"].ToString()).SetFont(fontContenido)));
+                tabla.AddCell(new Cell().Add(new Paragraph(reader["precio_publico"].ToString()).SetFont(fontContenido)));
+                tabla.AddCell(new Cell().Add(new Paragraph(reader["existencias"].ToString()).SetFont(fontContenido)));
+                tabla.AddCell(new Cell().Add(new Paragraph(reader["categoria"].ToString()).SetFont(fontContenido)));
             }
 
             documento.Add(tabla);
